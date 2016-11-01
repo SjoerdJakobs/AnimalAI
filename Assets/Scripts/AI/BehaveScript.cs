@@ -1,15 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BehaveScript : MonoBehaviour {
+public class BehaveScript : MonoBehaviour, IBehave
+{
+    /// <summary>
+    /// This script is the base to build any behaviour script used by the utility AI.
+    /// It has a start, stop and update function and can be called with the interface IBehave.
+    /// </summary>
+    public void StartScript()
+    {
+        OpenBehaviour();
+        StartCoroutine(ScriptUpdate());
+    }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public void StopScript()
+    {
+        StopCoroutine(ScriptUpdate());
+        CloseBehaviour();
+    }
+
+    IEnumerator ScriptUpdate()
+    {
+        while(true)
+        {
+            Behaviour();
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    protected virtual void OpenBehaviour()
+    {
+
+    }
+
+    protected virtual void Behaviour()
+    {
+
+    }
+
+    protected virtual void CloseBehaviour()
+    {
+
+    }
 }
