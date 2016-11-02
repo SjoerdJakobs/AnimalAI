@@ -6,4 +6,6 @@ public interface IBehave
     void StartScript();
 
     void StopScript();
+
+    int ReturnScriptNr();
 }

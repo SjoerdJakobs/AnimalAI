@@ -7,6 +7,15 @@ public class BehaveScript : MonoBehaviour, IBehave
     /// This script is the base to build any behaviour script used by the utility AI.
     /// It has a start, stop and update function and can be called with the interface IBehave.
     /// </summary>
+    
+    [SerializeField]
+    protected int scriptNR;
+
+    public int ReturnScriptNr()
+    {
+        return (scriptNR);
+    }
+
     public void StartScript()
     {
         OpenBehaviour();
