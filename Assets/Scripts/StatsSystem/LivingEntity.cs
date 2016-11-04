@@ -44,17 +44,34 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     void SetStats()
     {
-        if (entityStats.stamina < entityStats.maxStamina)
+        entityStats.stamina += entityStats.staminaRegen;
+        if (entityStats.stamina > entityStats.maxStamina)
         {
- 
+            entityStats.stamina = entityStats.maxStamina;
         }
-        if (entityStats.health < entityStats.maxHealth)
+        else if(entityStats.stamina <= 0)
         {
-            entityStats.health += entityStats.healthRegen;
-            if (entityStats.health > entityStats.maxHealth)
-            {
-                entityStats.health = entityStats.maxHealth;
-            }
+            entityStats.stamina = 0.1f;
+        }
+
+        entityStats.hunger += entityStats.getHungry;
+        if (entityStats.hunger > entityStats.maxHunger)
+        {
+            entityStats.hunger = entityStats.maxHunger;
+        }
+        else if (entityStats.hunger <= 0)
+        {
+            entityStats.hunger = 0.1f;
+        }
+
+        entityStats.health += entityStats.healthRegen;
+        if (entityStats.health > entityStats.maxHealth)
+        {
+            entityStats.health = entityStats.maxHealth;
+        }
+        else if (entityStats.health < 0)
+        {
+            entityStats.health = 0;
         }
     }
 
@@ -99,13 +116,14 @@ public class Stats
     public float intelect = 1;
     public float maxHealth = 10;
     public float health;
-    public float healthRegen = 0.1f;
+    public float healthRegen = 0;
     public float maxStamina = 100;
-    public float staminaRegen = 10;
+    public float staminaRegen = 0;
     public float stamina;
     public float moveMentspeed = 1;
     public float sizeMod = 1;
     public float maxHunger = 20;
+    public float getHungry = 0;
     public float hunger = 0;
     public float randomMutationChance = 0.5f;
 }

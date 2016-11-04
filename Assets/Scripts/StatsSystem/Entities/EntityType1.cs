@@ -5,14 +5,20 @@ public class EntityType1 : LivingEntity
 {
     [SerializeField]
     private EntityBehaviour entityBehaviour;
+    [SerializeField]
     private Priorities priorities;
     private ScriptAndPointsHandler scriptAndPointsHandler;
 
     // Use this for initialization
+    void Awake()
+    {
+        scriptAndPointsHandler = GetComponent<ScriptAndPointsHandler>();
+        //priorities = new Priorities();
+    }
+
     override protected void Start()
     {
         base.Start();
-        scriptAndPointsHandler = GetComponent<ScriptAndPointsHandler>();
         StartCoroutine(SlowUpdate());
     }
 
@@ -27,10 +33,11 @@ public class EntityType1 : LivingEntity
     {
         while (true)
         {
-            float hunger = entityStats.hunger * 10;
+            calculatePriorities();
 
-            scriptAndPointsHandler.inputValue(1, priorities.food);
-            scriptAndPointsHandler.inputValue(2, priorities.sleep);
+            scriptAndPointsHandler.inputValue(3, priorities.food);
+            //print(priorities.food);
+            scriptAndPointsHandler.inputValue(1, priorities.sleep);
 
             yield return new WaitForSeconds(0.1f);
         }
@@ -50,9 +57,10 @@ public class EntityType1 : LivingEntity
 }
 
 #region ENTITYBEHAVIOUR
-
+[System.Serializable]
 public class Priorities
 {
+    public float shelter = 0;
     public float safety = 0;
     public float food = 0;
     public float happy = 0;

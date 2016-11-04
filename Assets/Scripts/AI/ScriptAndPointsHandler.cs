@@ -29,6 +29,7 @@ public class ScriptAndPointsHandler : MonoBehaviour {
 
         currentScript = iBehaveScripts[3];
         //print(currentScript);
+        StartCoroutine(ManageValues());
     }
 
     public void inputValue(int scriptNr, float value)
@@ -37,12 +38,12 @@ public class ScriptAndPointsHandler : MonoBehaviour {
         if (!valuesDict.ContainsKey(scriptNr))
         {
             valuesDict.Add(scriptNr, value);
-            print("ok");
+            //print("ok");
         }
         else
         {
             valuesDict[scriptNr] = value;
-            print("update plis");
+            //print("update plis");
         }
     }
 
