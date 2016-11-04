@@ -23,4 +23,4 @@ public class HuntScript : BehaveScript
         base.CloseBehaviour();
         print("Close");
     }
-}
+}   

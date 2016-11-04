@@ -102,7 +102,6 @@ public class Stats
     public float moveMentspeed = 1;
     public float sizeMod = 1;
     public float hunger = 10;
-    public float horny = 0;
     public float randomMutationChance = 0.5f;
 }
 
