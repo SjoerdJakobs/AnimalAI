@@ -5,7 +5,7 @@ public class EntityType1 : LivingEntity
 {
     [SerializeField]
     private EntityBehaviour entityBehaviour;
-
+    private Priorities priorities;
     private ScriptAndPointsHandler scriptAndPointsHandler;
 
     // Use this for initialization
@@ -27,14 +27,37 @@ public class EntityType1 : LivingEntity
     {
         while (true)
         {
+            float hunger = entityStats.hunger * 10;
 
-            scriptAndPointsHandler.inputValue(1, 132.3f);
+            scriptAndPointsHandler.inputValue(1, priorities.food);
+            scriptAndPointsHandler.inputValue(2, priorities.sleep);
 
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+    void calculatePriorities()
+    {
+        priorities.food = entityStats.maxHunger / entityStats.hunger * entityStats.maxHunger; 
+        priorities.sleep = entityStats.maxStamina - entityStats.stamina;
+    }
+
+    void setStats()
+    {
+        
+
+    }
 }
+
 #region ENTITYBEHAVIOUR
+
+public class Priorities
+{
+    public float safety = 0;
+    public float food = 0;
+    public float happy = 0;
+    public float sleep = 0;
+}
 
 [System.Serializable]
 public class EntityBehaviour

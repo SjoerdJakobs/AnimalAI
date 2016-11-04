@@ -46,11 +46,15 @@ public class LivingEntity : MonoBehaviour , IAmLiving
     {
         if (entityStats.stamina < entityStats.maxStamina)
         {
-            entityStats.stamina += entityStats.staminaRegen;
+ 
         }
         if (entityStats.health < entityStats.maxHealth)
         {
-            entityStats.health += entityStats.maxHealth;
+            entityStats.health += entityStats.healthRegen;
+            if (entityStats.health > entityStats.maxHealth)
+            {
+                entityStats.health = entityStats.maxHealth;
+            }
         }
     }
 
@@ -96,12 +100,13 @@ public class Stats
     public float maxHealth = 10;
     public float health;
     public float healthRegen = 0.1f;
-    public float maxStamina = 1;
+    public float maxStamina = 100;
+    public float staminaRegen = 10;
     public float stamina;
-    public float staminaRegen = 0.1f;
     public float moveMentspeed = 1;
     public float sizeMod = 1;
-    public float hunger = 10;
+    public float maxHunger = 20;
+    public float hunger = 0;
     public float randomMutationChance = 0.5f;
 }
 
@@ -111,7 +116,7 @@ public class GrowthStats
     public float healthGrowth = 1;
     public float strengthGrowth = 1;
     public float intelectGrowth = 1;
-    public float staminaGrowth = 1;
+    public float staminaGrowth = 10;
     public float moveMentspeed = 1;
     public float sizeModGrowth = 0.1f;
     public float hungerDecline = 1;

@@ -31,17 +31,18 @@ public class ScriptAndPointsHandler : MonoBehaviour {
         //print(currentScript);
     }
 
-    public void inputValue(int scriptNr, float valuefl)
+    public void inputValue(int scriptNr, float value)
     {
-        valuesDict[scriptNr] = valuefl;
-        if (valuesDict[scriptNr] != null)
+        //valuesDict[scriptNr] = valuefl;
+        if (!valuesDict.ContainsKey(scriptNr))
         {
-            valuesDict.Add(scriptNr, valuefl);
+            valuesDict.Add(scriptNr, value);
             print("ok");
         }
         else
         {
-            valuesDict[scriptNr] = valuefl;
+            valuesDict[scriptNr] = value;
+            print("update plis");
         }
     }
 
@@ -49,22 +50,26 @@ public class ScriptAndPointsHandler : MonoBehaviour {
     {
         while(true)
         {
-            //compare values
-            //int highest= highest value key
-            //highestScript = iBehaveScripts[highest value key];
-            //KeyValuePair<int, float> kvp = values;
+            int highestKey = 0; ;
+            float highestValue = 0;
+            foreach (KeyValuePair<int, float> entry in valuesDict)
+            {
+                if(entry.Value >= highestValue)
+                {
+                    highestValue = entry.Value;
+                    highestKey = entry.Key; 
+                }
+                // do something with entry.Value or entry.Key
+            }
 
-
-            /*if (iBehaveScripts[highest value key] != currentScript)
+            if (iBehaveScripts[highestKey] != currentScript)
             {
                 currentScript.StopScript();
 
-                currentScript = iBehaveScripts[highest value key];
+                currentScript = iBehaveScripts[highestKey];
 
                 currentScript.StartScript();
-            }*/
-
-            //runningScript = currentScript key ;
+            }
 
             yield return new WaitForSeconds(0.1f);
         }
