@@ -6,14 +6,17 @@ public class GetFoodFromPlant : BehaveScript {
     [SerializeField]
     private LayerMask trees;
     private NavMeshAgent agent;
+    private EntityType1 stats;
     private GameObject target;
+    private IAmLiving tree;
 
     private bool hasTarget = false;
-    private float radius = 5;
+    private float radius = 10;
 
 
     void Awake()
     {
+        stats = GetComponent<EntityType1>();
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -21,7 +24,7 @@ public class GetFoodFromPlant : BehaveScript {
     override protected void OpenBehaviour()
     {
         base.OpenBehaviour();
-        print("Open");
+        print("Open" + scriptNR);
     }
 
     //this will run every 0.1 seconds
@@ -31,21 +34,43 @@ public class GetFoodFromPlant : BehaveScript {
         if (!hasTarget)
         {
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius, trees);
-            if(hitColliders[0] != null)
+            if (hitColliders.Length > 0)
             {
                 target = hitColliders[0].gameObject;
+                tree = target.GetComponent<IAmLiving>();
                 hasTarget = true;
             }
             else
             {
-                radius += 0.5f;
+                radius += 1;
+                hasTarget = false;
             }
         }
         else
         {
-            agent.SetDestination(target.transform.position);
+            if (target != null)
+            {
+                stats.publicStats.getHungry = -0.1f;
+                if (Vector3.Distance(transform.position, target.transform.position) <= 1f)
+                {
+                    agent.speed=0;
+                    stats.publicStats.getHungry = 0.5f;
+                    tree.TakeDamage(0.1f);
+                }
+                else
+                {
+                    agent.speed = 5;
+                    agent.SetDestination(target.transform.position);
+                }
+            }
+            else
+            {
+
+                print("halp");
+                hasTarget = false;
+                radius = 10;
+            }
         }
-        print("test");
     }
 
     //this will run once when this script is closed
@@ -53,7 +78,8 @@ public class GetFoodFromPlant : BehaveScript {
     {
         base.CloseBehaviour();
         agent.Stop();
-        radius = 5;
-        print("Close");
+        stats.publicStats.getHungry = -0.1f;
+        radius = 10;
+        print("Close" + scriptNR);
     }
 }

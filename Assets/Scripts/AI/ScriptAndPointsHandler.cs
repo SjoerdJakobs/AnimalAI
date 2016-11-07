@@ -17,6 +17,7 @@ public class ScriptAndPointsHandler : MonoBehaviour {
         iBehaveScripts = new Dictionary<int, IBehave>();
 
         valuesDict = new Dictionary<int, float>();
+        valuesDict.Add(1, 1);
 
         getIBehaveScripts = GetComponents<IBehave>();
 
@@ -27,8 +28,8 @@ public class ScriptAndPointsHandler : MonoBehaviour {
             //print(i.ReturnScriptNr());
         }
 
-        currentScript = iBehaveScripts[3];
-        //print(currentScript);
+        currentScript = iBehaveScripts[0];
+        print(currentScript);
         StartCoroutine(ManageValues());
     }
 

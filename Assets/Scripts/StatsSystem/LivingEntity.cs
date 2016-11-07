@@ -102,6 +102,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
     public void TakeDamage(float damage)
     {
         entityStats.health -= damage;
+        CheckDeath();
     }
     #endregion
 }

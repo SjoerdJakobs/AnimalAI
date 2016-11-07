@@ -7,6 +7,13 @@ public class EntityType1 : LivingEntity
     private EntityBehaviour entityBehaviour;
     [SerializeField]
     private Priorities priorities;
+
+    public Stats publicStats
+    {
+        get { return entityStats; }
+        set { entityStats = value; }
+    }
+
     private ScriptAndPointsHandler scriptAndPointsHandler;
 
     // Use this for initialization
@@ -35,9 +42,9 @@ public class EntityType1 : LivingEntity
         {
             calculatePriorities();
 
-            scriptAndPointsHandler.inputValue(3, priorities.food);
+            scriptAndPointsHandler.inputValue(1, priorities.food);
             //print(priorities.food);
-            scriptAndPointsHandler.inputValue(1, priorities.sleep);
+            scriptAndPointsHandler.inputValue(2, priorities.sleep);
 
             yield return new WaitForSeconds(0.1f);
         }
