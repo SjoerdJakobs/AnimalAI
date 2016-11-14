@@ -104,12 +104,33 @@ public class LivingEntity : MonoBehaviour , IAmLiving
         entityStats.health -= damage;
         CheckDeath();
     }
+
+    public void GetEaten(Animal eatingEntity)
+    {
+        
+    }
+
+    public void Eat()
+    {
+
+    }
     #endregion
 }
 
 #region ENTITYSTATS
 
 [System.Serializable]
+public class Stats
+{
+    public float age = 1;
+    public float maxHealth = 10;
+    public float health;
+    public float healthRegen = 0;
+    public float sizeMod = 1;
+    public float randomMutationChance = 0.5f;
+}
+
+/*[System.Serializable]
 public class Stats
 {
     public float age = 1;
@@ -127,7 +148,7 @@ public class Stats
     public float getHungry = 0;
     public float hunger = 0;
     public float randomMutationChance = 0.5f;
-}
+}*/
 
 [System.Serializable]
 public class GrowthStats

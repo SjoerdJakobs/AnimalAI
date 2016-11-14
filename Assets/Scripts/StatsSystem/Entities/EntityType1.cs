@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EntityType1 : LivingEntity
+public class EntityType1 : Animal
 {
     [SerializeField]
     private EntityBehaviour entityBehaviour;
