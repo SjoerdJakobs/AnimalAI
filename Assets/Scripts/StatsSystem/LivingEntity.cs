@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LivingEntity : MonoBehaviour , IAmLiving
 {
     [SerializeField]
-    protected Stats entityStats;
+    protected EntityStats entityStats;
+    [SerializeField]
+    protected Dictionary<string, float> entityStatsDict;
     [SerializeField]
     protected GrowthStats entityStatsGrowth;
 
@@ -14,12 +17,22 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     public event System.Action OnDeath;
 
+    protected virtual void Awake()
+    {
+        entityStatsDict = new Dictionary<string, float>();
+        entityStatsDict.Add("age", entityStats.age);
+        entityStatsDict.Add("maxHealth", entityStats.maxHealth);
+        entityStatsDict.Add("health", entityStats.health);
+        entityStatsDict.Add("healthRegen", entityStats.healthRegen);
+        entityStatsDict.Add("sizeMod", entityStats.sizeMod);
+        entityStatsDict.Add("randomMutationChance", entityStats.randomMutationChance);
+    }
 
     // Use this for initialization
     protected virtual void Start () {
         StartCoroutine(SlowUpdate());
         dead = false;
-	}
+}
 
     #region UPDATE
     protected virtual void Update()
@@ -44,26 +57,6 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     void SetStats()
     {
-        entityStats.stamina += entityStats.staminaRegen;
-        if (entityStats.stamina > entityStats.maxStamina)
-        {
-            entityStats.stamina = entityStats.maxStamina;
-        }
-        else if(entityStats.stamina <= 0)
-        {
-            entityStats.stamina = 0.1f;
-        }
-
-        entityStats.hunger += entityStats.getHungry;
-        if (entityStats.hunger > entityStats.maxHunger)
-        {
-            entityStats.hunger = entityStats.maxHunger;
-        }
-        else if (entityStats.hunger <= 0)
-        {
-            entityStats.hunger = 0.1f;
-        }
-
         entityStats.health += entityStats.healthRegen;
         if (entityStats.health > entityStats.maxHealth)
         {
@@ -118,9 +111,8 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 }
 
 #region ENTITYSTATS
-
 [System.Serializable]
-public class Stats
+public class EntityStats
 {
     public float age = 1;
     public float maxHealth = 10;

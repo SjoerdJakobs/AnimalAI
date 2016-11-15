@@ -29,7 +29,7 @@ public class ScriptAndPointsHandler : MonoBehaviour {
         }
 
         currentScript = iBehaveScripts[0];
-        print(currentScript);
+        //print(currentScript);
         StartCoroutine(ManageValues());
     }
 

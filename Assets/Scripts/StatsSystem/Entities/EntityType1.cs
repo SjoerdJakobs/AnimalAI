@@ -8,17 +8,24 @@ public class EntityType1 : Animal
     [SerializeField]
     private Priorities priorities;
 
-    public Stats publicStats
+    public EntityStats getEntityStats
     {
         get { return entityStats; }
         set { entityStats = value; }
     }
 
+    public AnimalStats getAnimalStats
+    {
+        get { return animalStats; }
+        set { animalStats = value; }
+    }
+
     private ScriptAndPointsHandler scriptAndPointsHandler;
 
     // Use this for initialization
-    void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         scriptAndPointsHandler = GetComponent<ScriptAndPointsHandler>();
         //priorities = new Priorities();
     }
@@ -52,8 +59,8 @@ public class EntityType1 : Animal
 
     void calculatePriorities()
     {
-        priorities.food = entityStats.maxHunger / entityStats.hunger * entityStats.maxHunger; 
-        priorities.sleep = entityStats.maxStamina - entityStats.stamina;
+        priorities.food = animalStats.maxHunger / animalStats.hunger * animalStats.maxHunger; 
+        priorities.sleep = animalStats.maxStamina - animalStats.stamina;
     }
 
     void setStats()
