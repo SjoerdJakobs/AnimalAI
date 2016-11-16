@@ -22,7 +22,7 @@ public class Animal : LivingEntity
     override protected void Start()
     {
         base.Start();
-        print("halp");
+        //print("halp");
         StartCoroutine(SlowUpdate());
     }
 

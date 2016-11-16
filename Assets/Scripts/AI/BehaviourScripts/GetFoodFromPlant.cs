@@ -24,7 +24,11 @@ public class GetFoodFromPlant : BehaveScript {
     override protected void OpenBehaviour()
     {
         base.OpenBehaviour();
-        //print("Open" + scriptNR);
+        stats.getAnimalStats.getHungry = -0.1f;
+        agent.ResetPath();
+        //agent.Resume();
+        radius = 10;
+        print("Open" + scriptNR);
     }
 
     //this will run every 0.1 seconds
@@ -53,7 +57,7 @@ public class GetFoodFromPlant : BehaveScript {
                 stats.getAnimalStats.getHungry = -0.1f;
                 if (Vector3.Distance(transform.position, target.transform.position) <= 1f)
                 {
-                    agent.speed=0;
+                    agent.speed = 0;
                     stats.getAnimalStats.getHungry = 0.5f;
                     tree.TakeDamage(0.1f);
                 }
@@ -65,12 +69,11 @@ public class GetFoodFromPlant : BehaveScript {
             }
             else
             {
-
-                print("halp");
                 hasTarget = false;
                 radius = 10;
             }
         }
+        print("script"+scriptNR);
     }
 
     //this will run once when this script is closed

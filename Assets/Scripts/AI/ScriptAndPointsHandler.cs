@@ -59,10 +59,13 @@ public class ScriptAndPointsHandler : MonoBehaviour {
                 if(entry.Value >= highestValue)
                 {
                     highestValue = entry.Value;
-                    highestKey = entry.Key; 
+                    highestKey = entry.Key;
                 }
                 // do something with entry.Value or entry.Key
             }
+
+            print("key " + highestKey);
+            //print("value " + highestValue);
 
             if (iBehaveScripts[highestKey] != currentScript)
             {

@@ -33,7 +33,6 @@ public class BehaveScript : MonoBehaviour, IBehave
         while(true)
         {
             Behaviour();
-
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -50,6 +49,6 @@ public class BehaveScript : MonoBehaviour, IBehave
 
     protected virtual void CloseBehaviour()
     {
-
+        StopAllCoroutines();
     }
 }
