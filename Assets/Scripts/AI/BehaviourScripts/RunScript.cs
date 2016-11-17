@@ -7,14 +7,14 @@ public class RunScript : BehaveScript
     override protected void OpenBehaviour()
     {
         base.OpenBehaviour();
-        print("Open" + scriptNR);
+        //print("Open" + scriptNR);
     }
 
     //this will run every 0.1 seconds
     override protected void Behaviour()
     {
         base.Behaviour();
-        print("test"+ scriptNR);
+        //print("test"+ scriptNR);
     }
 
     //this will run once when this script is closed
@@ -22,6 +22,6 @@ public class RunScript : BehaveScript
     {
         base.CloseBehaviour();
         //StopAllCoroutines();
-        print("Close"+ scriptNR);
+        //print("Close"+ scriptNR);
     }
 }

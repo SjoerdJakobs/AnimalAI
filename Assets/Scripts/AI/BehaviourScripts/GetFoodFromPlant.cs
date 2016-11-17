@@ -28,7 +28,7 @@ public class GetFoodFromPlant : BehaveScript {
         agent.ResetPath();
         //agent.Resume();
         radius = 10;
-        print("Open" + scriptNR);
+        //print("Open" + scriptNR);
     }
 
     //this will run every 0.1 seconds
@@ -55,7 +55,7 @@ public class GetFoodFromPlant : BehaveScript {
             if (target != null)
             {
                 stats.getAnimalStats.getHungry = -0.1f;
-                if (Vector3.Distance(transform.position, target.transform.position) <= 1f)
+                if (Vector3.Distance(transform.position, target.transform.position) <= 1.5f)
                 {
                     agent.speed = 0;
                     stats.getAnimalStats.getHungry = 0.5f;
@@ -73,7 +73,7 @@ public class GetFoodFromPlant : BehaveScript {
                 radius = 10;
             }
         }
-        print("script"+scriptNR);
+        //print("script"+scriptNR);
     }
 
     //this will run once when this script is closed
@@ -83,6 +83,6 @@ public class GetFoodFromPlant : BehaveScript {
         agent.Stop();
         stats.getAnimalStats.getHungry = -0.1f;
         radius = 10;
-        print("Close" + scriptNR);
+        //print("Close" + scriptNR);
     }
 }
