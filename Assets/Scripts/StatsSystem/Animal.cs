@@ -23,7 +23,7 @@ public class Animal : LivingEntity
     {
         base.Start();
         //print("halp");
-        StartCoroutine(SlowUpdate());
+        StartCoroutine("SlowUpdate",startTimer);
     }
 
     // Update is called once per frame
@@ -56,7 +56,7 @@ public class Animal : LivingEntity
             {
                 animalStats.hunger = 0.1f;
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }

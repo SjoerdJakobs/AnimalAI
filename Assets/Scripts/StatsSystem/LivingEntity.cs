@@ -11,6 +11,8 @@ public class LivingEntity : MonoBehaviour , IAmLiving
     [SerializeField]
     protected GrowthStats entityStatsGrowth;
 
+    protected float startTimer;
+
     private float countForBirthday;
 
     protected bool dead;
@@ -20,6 +22,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
     protected virtual void Awake()
     {
         entityStatsDict = new Dictionary<string, float>();
+        startTimer = Random.Range(0.1f, 10) / 10;
         entityStatsDict.Add("age", entityStats.age);
         entityStatsDict.Add("maxHealth", entityStats.maxHealth);
         entityStatsDict.Add("health", entityStats.health);
@@ -30,7 +33,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     // Use this for initialization
     protected virtual void Start () {
-        StartCoroutine(SlowUpdate());
+        StartCoroutine("SlowUpdate",startTimer);
         dead = false;
 }
 
@@ -48,7 +51,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
             {
                 SetStats();
 
-            }yield return new WaitForSeconds(0.25f);
+            }yield return new WaitForSeconds(0.2f);
         }
     }
     #endregion
