@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tree : LivingEntity {
+public class Tree : Plant {
     override protected void Death()
     {
         base.Death();

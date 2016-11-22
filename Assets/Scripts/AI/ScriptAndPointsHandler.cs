@@ -4,6 +4,29 @@ using System.Collections.Generic;
 
 public class ScriptAndPointsHandler : MonoBehaviour {
 
+    /// <summary>
+    /// This script is the backbone of the utility ai.
+    /// It gets all the behave scripts and gets their scriptNr and adds them to a dictionary.
+    /// Sourcing another script it can give points to scriptNrs.
+    /// example:
+    /// ---------------------------------------------------------------
+    /// public class SomeClass
+    /// {
+    ///     private ScriptAndPointsHandler scriptAndPointsHandler;
+    ///     private float food
+    ///     void Start()
+    ///     {
+    ///         food = 71;
+    ///         scriptAndPointsHandler.inputValue(1, food);
+    ///     }
+    /// }
+    /// ---------------------------------------------------------------
+    /// This will give this script a dictionary value of 1 and 71.
+    /// It compares the value against other values if there are any and pickes the highest value.
+    /// Then it compares the key of the highest value to the keys of the dictionary wich are scriptNrs.
+    /// In this case it gets the script with scriptNr 1.
+    /// </summary>
+
     IBehave[] getIBehaveScripts;
     IBehave currentScript;
 

@@ -1,15 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Plant : MonoBehaviour {
+public class Plant : LivingEntity
+{
+    override protected void Awake()
+    {
+        base.Awake();
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    }
+
+    override protected void Start()
+    {
+        base.Start();
+
+    }
+
+    override protected void Update()
+    {
+        base.Update();
+
+    }
 }

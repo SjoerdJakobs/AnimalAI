@@ -3,16 +3,19 @@
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class CreatePlane : MonoBehaviour {
 
-	public int xSize, zSize;
+    /// <summary>
+    /// this is a simple class to make a plane mesh.
+    /// add this script to a object and click generate in the editor or call Generate() from a script.
+    /// the centre of the plane wil be the same position as the object this script is attatched to.
+    /// this script also doesnt add a material so that needs to be added to the object or the plane will be pink.
+    /// </summary>
+
+    public int xSize, zSize;
 
 	private Mesh mesh;
 	private Vector3[] vertices;
-
-	private void Awake () {
-
-	}
-
-	public void Generate () {
+	public void Generate ()
+    {        
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.name = "Procedural Grid";
 

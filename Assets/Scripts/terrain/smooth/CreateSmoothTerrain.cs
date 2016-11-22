@@ -3,7 +3,11 @@ using System.Collections;
 
 public class CreateSmoothTerrain : MonoBehaviour
 {
-
+    /// <summary>
+    /// This script creates a terrain by using a plane and moving its vertices on the y-axis and spawning given flora.
+    /// This script wont create a plane itself and will not work without a plane.
+    /// Add objects to spawn in the editor for the flora.
+    /// </summary>
     //Ints
     [SerializeField]
     private int heightScale = 5;//hoogte scale in units
@@ -40,7 +44,6 @@ public class CreateSmoothTerrain : MonoBehaviour
     private GameObject rock2;
     [SerializeField]
     private GameObject[] trees;
-
     [SerializeField]
     private GameObject treesObject;
     [SerializeField]
