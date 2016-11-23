@@ -26,6 +26,7 @@ public class Animal : LivingEntity
         StartCoroutine(SlowUpdate());
     }
 
+    #region UPDATE
     // Update is called once per frame
     override protected void Update()
     {
@@ -61,7 +62,10 @@ public class Animal : LivingEntity
             yield return new WaitForSeconds(0.2f);
         }
     }
+    #endregion
 }
+
+#region AddedStats
 [System.Serializable]
 public class AnimalStats
 {
@@ -75,3 +79,4 @@ public class AnimalStats
     public float hunger = 0;
     public float moveMentspeed = 1;
 }
+#endregion

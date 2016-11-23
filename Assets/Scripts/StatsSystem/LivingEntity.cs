@@ -94,7 +94,6 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     #endregion
 
-
     #region INTERFACE
     public void TakeDamage(float damage)
     {
