@@ -33,7 +33,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     // Use this for initialization
     protected virtual void Start () {
-        StartCoroutine("SlowUpdate",startTimer);
+        StartCoroutine(SlowUpdate());
         dead = false;
 }
 
@@ -45,6 +45,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
 
     IEnumerator SlowUpdate()
     {
+        yield return new WaitForSeconds(startTimer);
         while (true)
         {
             if (!dead)

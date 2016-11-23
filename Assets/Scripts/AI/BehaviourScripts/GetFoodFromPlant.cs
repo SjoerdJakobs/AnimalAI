@@ -55,7 +55,7 @@ public class GetFoodFromPlant : BehaveScript {
             if (target != null)
             {
                 stats.getAnimalStats.getHungry = -0.1f;
-                if (Vector3.Distance(transform.position, target.transform.position) <= 1.5f)
+                if (Vector3.Distance(transform.position, target.transform.position) <= 2f)
                 {
                     agent.speed = 0;
                     stats.getAnimalStats.getHungry = 0.5f;

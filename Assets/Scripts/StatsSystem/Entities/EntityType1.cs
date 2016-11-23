@@ -34,6 +34,7 @@ public class EntityType1 : Animal
     {
         base.Start();
         StartCoroutine(SlowUpdate());
+        //print("startEntity");
     }
 
     // Update is called once per frame

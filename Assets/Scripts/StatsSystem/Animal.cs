@@ -23,7 +23,7 @@ public class Animal : LivingEntity
     {
         base.Start();
         //print("halp");
-        StartCoroutine("SlowUpdate",startTimer);
+        StartCoroutine(SlowUpdate());
     }
 
     // Update is called once per frame
@@ -35,8 +35,10 @@ public class Animal : LivingEntity
 
     IEnumerator SlowUpdate()
     {
+        yield return new WaitForSeconds(startTimer);
         while (true)
         {
+            //print("test");
             animalStats.stamina += animalStats.staminaRegen;
             if (animalStats.stamina > animalStats.maxStamina)
             {
