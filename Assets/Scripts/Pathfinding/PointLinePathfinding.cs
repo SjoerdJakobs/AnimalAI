@@ -130,20 +130,28 @@ public class PointLinePathfinding : MonoBehaviour {
     void CreatePath(Vector3 target)
     {
         Vector3 direct = (transform.position - new Vector3(target.x,transform.position.y,target.z)).normalized;
-        for (int i = 1; i < (pathingRange / spaceBetweenPoints) + 1;)
+        for (int i = 0; i < (pathingRange / spaceBetweenPoints); i++)
         {
             RaycastHit hit;
-            Vector3 waypoint = (direct *(spaceBetweenPoints * i))+new Vector3(0,50,0);
-            if (Physics.Raycast(waypoint, Vector3.down, out hit,100,walkableMask, QueryTriggerInteraction.Ignore))
+            Vector3 waypoint = (direct *(spaceBetweenPoints * (i+1)))+new Vector3(0,50,0);
+            if (Physics.Raycast(waypoint, Vector3.down, out hit,100))
             {
-                Debug.Assert(debugMode, "hit a walkable object - hit pos: " + hit.point);                
+                if (hit.transform.gameObject.layer == walkableMask)
+                {
+                    waypoints[i] = hit.point;
+                    Debug.Assert(debugMode, "hit a walkable object - hit pos: " + hit.point + " rayNr: " + i);
+                }
+                else
+                {
+
+                    Debug.Assert(debugMode, "hit a unwalkable walkable object - hit pos: " + hit.point + " rayNr: " + i);
+                }        
             }
             else
             {
-                Debug.Assert(debugMode, "no object that is 50 units higher or lower than the pathfinding object");                
+                Debug.Assert(debugMode, "no object that is 50 units higher or lower than the pathfinding object" + " rayNr: " + i);                
             }
-            Debug.Assert(debugMode, "reached for loop");
-            
+            Debug.Assert(debugMode, "reached for loop");           
         }
     }
 
@@ -155,7 +163,7 @@ public class PointLinePathfinding : MonoBehaviour {
     {
         Debug.Assert(debugMode, "reached FollowPath");
         
-        if (waypoints.Count >= 1)
+        if (waypoints.Count >= 0)
         {
             Debug.Assert(debugMode, "recieved waypoints");
             
@@ -185,6 +193,27 @@ public class PointLinePathfinding : MonoBehaviour {
         else
         { 
             Debug.Assert(debugMode, "no waypoints");
+        }
+    }
+
+    public void OnDrawGizmos()
+    {
+        if (showPathInEditor)
+        {
+            for (int i = 0; i < waypoints.Count; i++)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawCube(waypoints[i], Vector3.one);
+
+                if (i == 0)
+                {
+                    Gizmos.DrawLine(transform.position, waypoints[i]);
+                }
+                else
+                {
+                    Gizmos.DrawLine(waypoints[i - 1], waypoints[i]);
+                }
+            }
         }
     }
     #endregion
