@@ -59,16 +59,21 @@ public class PointLinePathfinding : MonoBehaviour {
         [SerializeField]
     private bool debugMode;             //set this bool true to activate debug mode, to check if things work.
 
+    private int targetNr;               //this is used to count up in following the path and can be set to 0 for a new path
     private Vector3 pathingTarget;      //this is the position the pathfinding wil go to.
     private List<Vector3> waypoints;    //in this list are the positions that the pathfinding wil use for navigation.
-    private bool hasTarget;             //this bool is used to check if there is a target to walk to.
+    //private bool hasTarget;             //this bool is used to check if there is a target to walk to.
     
     #endregion
 
     void Start()
     {
-        Vector3 target = new Vector3(1,2,3);
-        Debug.Assert(debugMode, "target recieved reached. target pos is: " + target);
+        CreatePath(pathingTarget);
+        waypoints = new List<Vector3>();
+        StartCoroutine(RefreshPath());
+        //Vector3 target = new Vector3(1,2,3);
+        print("halp");
+        //Debug.Assert(!debugMode, "target recieved reached. target pos is: " + target);
     }
 
     #region Functions
@@ -80,19 +85,19 @@ public class PointLinePathfinding : MonoBehaviour {
     /// <param name="target">the position of your destination</param>
     public void PathDestination(Vector3 target)
     {
-        Debug.Assert(debugMode,"target recieved reached. target pos is: " + target);
+        Debug.Assert(!debugMode,"target recieved reached. target pos is: " + target);
         
         RaycastHit hit;
-        if (Physics.Raycast((target + new Vector3(0, 50, 0)), Vector3.down, out hit, 100, walkableMask, QueryTriggerInteraction.Collide))
+        if (Physics.Raycast((target + new Vector3(0, 50, 0)), Vector3.down, out hit, 100, walkableMask, QueryTriggerInteraction.Ignore))
         {
             pathingTarget = hit.point;
-
-            Debug.Assert(debugMode, "path destination set. pathing target pos is: " + pathingTarget);
+            //hasTarget = true;
+            Debug.Assert(!debugMode, "path destination set. pathing target pos is: " + pathingTarget.normalized);
             
         }
         else
         {
-            Debug.Assert(debugMode, "target isnt at a walkable place");
+            Debug.Assert(!debugMode, "target isnt at a walkable place");
         }
     }
     /// <summary>
@@ -101,7 +106,7 @@ public class PointLinePathfinding : MonoBehaviour {
     public void StartPath()
     {
         StartCoroutine(FollowPath());
-        Debug.Assert(debugMode, "StartPath reached");
+        Debug.Assert(!debugMode, "StartPath reached");
         
     }
     /// <summary>
@@ -110,7 +115,7 @@ public class PointLinePathfinding : MonoBehaviour {
     public void StopPath()
     {
 
-        Debug.Assert(debugMode, "StopPath reached");
+        Debug.Assert(!debugMode, "StopPath reached");
         
     }
     /// <summary>
@@ -119,7 +124,7 @@ public class PointLinePathfinding : MonoBehaviour {
     public void RecalculateHeight()
     {
 
-        Debug.Assert(debugMode, "RecalculateHeight reached");        
+        Debug.Assert(!debugMode, "RecalculateHeight reached");        
     }
     #endregion
 
@@ -130,28 +135,39 @@ public class PointLinePathfinding : MonoBehaviour {
     void CreatePath(Vector3 target)
     {
         Vector3 direct = (transform.position - new Vector3(target.x,transform.position.y,target.z)).normalized;
+        print(direct);
         for (int i = 0; i < (pathingRange / spaceBetweenPoints); i++)
         {
             RaycastHit hit;
             Vector3 waypoint = (direct *(spaceBetweenPoints * (i+1)))+new Vector3(0,50,0);
             if (Physics.Raycast(waypoint, Vector3.down, out hit,100))
             {
-                if (hit.transform.gameObject.layer == walkableMask)
+                if (hit.transform.gameObject.layer != walkableMask)
                 {
                     waypoints[i] = hit.point;
-                    Debug.Assert(debugMode, "hit a walkable object - hit pos: " + hit.point + " rayNr: " + i);
+                    Debug.Assert(!debugMode, "hit a walkable object - hit pos: " + hit.point + " rayNr: " + i);
                 }
                 else
                 {
-
-                    Debug.Assert(debugMode, "hit a unwalkable walkable object - hit pos: " + hit.point + " rayNr: " + i);
+                    
+                    Debug.Assert(!debugMode, "hit a unwalkable walkable object - hit pos: " + hit.point + " hit object name: " + hit.collider.gameObject +" rayNr: " + i);
                 }        
             }
             else
             {
-                Debug.Assert(debugMode, "no object that is 50 units higher or lower than the pathfinding object" + " rayNr: " + i);                
+                Debug.Assert(!debugMode, "no object that is 50 units higher or lower than the pathfinding object" + " rayNr: " + i);                
             }
-            Debug.Assert(debugMode, "reached for loop");           
+            Debug.Assert(!debugMode, "reached for loop");           
+        }
+    }
+
+    IEnumerator RefreshPath()
+    {
+        while(true)
+        {
+            targetNr = 0;
+            CreatePath(pathingTarget);
+            yield return new WaitForSeconds(refreshRate);
         }
     }
 
@@ -161,29 +177,28 @@ public class PointLinePathfinding : MonoBehaviour {
     /// </summary>
     IEnumerator FollowPath()
     {
-        Debug.Assert(debugMode, "reached FollowPath");
+        Debug.Assert(!debugMode, "reached FollowPath");
         
-        if (waypoints.Count >= 0)
+        if (waypoints.Count >= 1)
         {
-            Debug.Assert(debugMode, "recieved waypoints");
+            Debug.Assert(!debugMode, "recieved waypoints");
             
             Vector3 currentWaypoint = waypoints[0];
-            int targetIndex = 0;
 
             while (true)
             {
                 if (transform.position == currentWaypoint)
                 {
-                    targetIndex++;
-                    if (targetIndex >= waypoints.Count)
+                    targetNr++;
+                    if (targetNr >= waypoints.Count)
 
                     {
-                        Debug.Assert(debugMode, "at target destination");
-                        hasTarget = false;
+                        Debug.Assert(!debugMode, "at target destination");
+                        //hasTarget = false;
                         yield break;
                     }
 
-                    currentWaypoint = waypoints[targetIndex];
+                    currentWaypoint = waypoints[targetNr];
                 }
 
                 transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, movementSpeed * Time.deltaTime);
@@ -192,7 +207,7 @@ public class PointLinePathfinding : MonoBehaviour {
         }
         else
         { 
-            Debug.Assert(debugMode, "no waypoints");
+            Debug.Assert(!debugMode, "no waypoints");
         }
     }
 
@@ -200,18 +215,18 @@ public class PointLinePathfinding : MonoBehaviour {
     {
         if (showPathInEditor)
         {
-            for (int i = 0; i < waypoints.Count; i++)
+            for (int i = targetNr; i < waypoints.Count; i++)
             {
                 Gizmos.color = Color.black;
-                Gizmos.DrawCube(waypoints[i], Vector3.one);
+                Gizmos.DrawCube(waypoints[targetNr], Vector3.one);
 
-                if (i == 0)
+                if (i == targetNr)
                 {
-                    Gizmos.DrawLine(transform.position, waypoints[i]);
+                    Gizmos.DrawLine(transform.position, waypoints[targetNr]);
                 }
                 else
                 {
-                    Gizmos.DrawLine(waypoints[i - 1], waypoints[i]);
+                    Gizmos.DrawLine(waypoints[targetNr - 1], waypoints[targetNr]);
                 }
             }
         }

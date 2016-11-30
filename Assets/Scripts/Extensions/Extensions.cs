@@ -60,7 +60,7 @@ public static class Extensions
     public static void limitVelocitySoft3D(this Rigidbody r, float maxVelocity, float reverseForce)
     {
         //reverseForce 10 is the minimum for it to work properly
-        //mostly use this as default limitVelocityHard3D 
+        //mostly use this as default
         float velocity = Vector3.Magnitude(r.velocity);
         if (velocity > maxVelocity)
         {
