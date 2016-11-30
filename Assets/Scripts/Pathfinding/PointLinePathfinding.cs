@@ -39,8 +39,6 @@ public class PointLinePathfinding : MonoBehaviour {
         set { spaceBetweenPoints = value; }
     }
         [SerializeField]
-    private LayerMask walkableMask;  //all the layermasks in here wil be seen as mesh that can be walked on.
-        [SerializeField]
     private bool usePhysics;            //set this bool true if you want to use physics.
     public bool _usePhysics
     {
@@ -58,21 +56,27 @@ public class PointLinePathfinding : MonoBehaviour {
     private bool showPathInEditor;      //set this bool true to see the path of the object in the editor.
         [SerializeField]
     private bool debugMode;             //set this bool true to activate debug mode, to check if things work.
-
+    
+    private int walkableMask;     //all the layermasks in here wil be seen as mesh that can be walked on.
     private int targetNr;               //this is used to count up in following the path and can be set to 0 for a new path
     private Vector3 pathingTarget;      //this is the position the pathfinding wil go to.
-    private List<Vector3> waypoints;    //in this list are the positions that the pathfinding wil use for navigation.
-    //private bool hasTarget;             //this bool is used to check if there is a target to walk to.
+    private Vector3[] path;             //in this list are the positions that the pathfinding wil use for navigation.
+    private bool hasTarget;             //this bool is used to check if there is a target to walk to.
+    private bool hasPath;
+    private bool shouldMove;
     
     #endregion
 
     void Start()
     {
-        CreatePath(pathingTarget);
-        waypoints = new List<Vector3>();
+        hasTarget = false;
+        hasPath = false;
+        shouldMove = false;
+        path = new Vector3[0];
+        path = CreatePath(pathingTarget);
+        walkableMask = LayerMask.NameToLayer("Ground");
         StartCoroutine(RefreshPath());
-        //Vector3 target = new Vector3(1,2,3);
-        print("halp");
+        StartCoroutine(FollowPath());
         //Debug.Assert(!debugMode, "target recieved reached. target pos is: " + target);
     }
 
@@ -88,12 +92,15 @@ public class PointLinePathfinding : MonoBehaviour {
         Debug.Assert(!debugMode,"target recieved reached. target pos is: " + target);
         
         RaycastHit hit;
-        if (Physics.Raycast((target + new Vector3(0, 50, 0)), Vector3.down, out hit, 100, walkableMask, QueryTriggerInteraction.Ignore))
+        Ray ray = new Ray(target + new Vector3(0, 50, 0), Vector3.down);
+        if (Physics.Raycast(ray, out hit, 100))
         {
-            pathingTarget = hit.point;
-            //hasTarget = true;
-            Debug.Assert(!debugMode, "path destination set. pathing target pos is: " + pathingTarget.normalized);
-            
+            if (hit.transform.gameObject.layer == walkableMask)
+            {
+                pathingTarget = hit.point;
+                hasTarget = true;
+                Debug.Assert(!debugMode, "path destination set. pathing target pos is: " + pathingTarget.normalized);
+            }
         }
         else
         {
@@ -105,7 +112,7 @@ public class PointLinePathfinding : MonoBehaviour {
     /// </summary>
     public void StartPath()
     {
-        StartCoroutine(FollowPath());
+        shouldMove = true;
         Debug.Assert(!debugMode, "StartPath reached");
         
     }
@@ -114,7 +121,7 @@ public class PointLinePathfinding : MonoBehaviour {
     /// </summary>
     public void StopPath()
     {
-
+        shouldMove = false;
         Debug.Assert(!debugMode, "StopPath reached");
         
     }
@@ -132,19 +139,21 @@ public class PointLinePathfinding : MonoBehaviour {
     /// <summary>
     /// this funtion creates the actual path.
     /// </summary>
-    void CreatePath(Vector3 target)
+    Vector3[] CreatePath(Vector3 target)
     {
+        List<Vector3> calculatedPath = new List<Vector3>();
         Vector3 direct = (transform.position - new Vector3(target.x,transform.position.y,target.z)).normalized;
         print(direct);
         for (int i = 0; i < (pathingRange / spaceBetweenPoints); i++)
         {
             RaycastHit hit;
             Vector3 waypoint = (direct *(spaceBetweenPoints * (i+1)))+new Vector3(0,50,0);
-            if (Physics.Raycast(waypoint, Vector3.down, out hit,100))
+            Ray ray = new Ray(waypoint, Vector3.down);
+            if (Physics.Raycast(ray, out hit,100))
             {
-                if (hit.transform.gameObject.layer != walkableMask)
+                if (hit.transform.gameObject.layer == walkableMask)
                 {
-                    waypoints[i] = hit.point;
+                    calculatedPath.Add(hit.point);
                     Debug.Assert(!debugMode, "hit a walkable object - hit pos: " + hit.point + " rayNr: " + i);
                 }
                 else
@@ -159,14 +168,20 @@ public class PointLinePathfinding : MonoBehaviour {
             }
             Debug.Assert(!debugMode, "reached for loop");           
         }
+        hasPath = true;
+        shouldMove = true;
+        return(calculatedPath.ToArray());
     }
 
     IEnumerator RefreshPath()
     {
         while(true)
         {
-            targetNr = 0;
-            CreatePath(pathingTarget);
+            if (hasTarget)
+            {
+                targetNr = 0;
+                path = CreatePath(pathingTarget);
+            }
             yield return new WaitForSeconds(refreshRate);
         }
     }
@@ -179,29 +194,30 @@ public class PointLinePathfinding : MonoBehaviour {
     {
         Debug.Assert(!debugMode, "reached FollowPath");
         
-        if (waypoints.Count >= 1)
+        if (path.Length >= 1)
         {
             Debug.Assert(!debugMode, "recieved waypoints");
             
-            Vector3 currentWaypoint = waypoints[0];
+            Vector3 currentWaypoint = path[0];
 
             while (true)
             {
                 if (transform.position == currentWaypoint)
                 {
                     targetNr++;
-                    if (targetNr >= waypoints.Count)
+                    if (targetNr >= path.Length)
 
                     {
                         Debug.Assert(!debugMode, "at target destination");
-                        //hasTarget = false;
+                        hasTarget = false;
+                        hasPath = false;
                         yield break;
                     }
 
-                    currentWaypoint = waypoints[targetNr];
+                    currentWaypoint = path[targetNr];
                 }
-
-                transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, movementSpeed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, movementSpeed * Time.deltaTime);
+                
                 yield return null;
             }
         }
@@ -209,24 +225,25 @@ public class PointLinePathfinding : MonoBehaviour {
         { 
             Debug.Assert(!debugMode, "no waypoints");
         }
+        //yield return null;
     }
 
     public void OnDrawGizmos()
     {
-        if (showPathInEditor)
+        if (path != null)
         {
-            for (int i = targetNr; i < waypoints.Count; i++)
+            for (int i = targetNr; i < path.Length; i++)
             {
                 Gizmos.color = Color.black;
-                Gizmos.DrawCube(waypoints[targetNr], Vector3.one);
+                Gizmos.DrawCube(path[targetNr], Vector3.one);
 
                 if (i == targetNr)
                 {
-                    Gizmos.DrawLine(transform.position, waypoints[targetNr]);
+                    Gizmos.DrawLine(transform.position, path[targetNr]);
                 }
                 else
                 {
-                    Gizmos.DrawLine(waypoints[targetNr - 1], waypoints[targetNr]);
+                    Gizmos.DrawLine(path[targetNr - 1], path[targetNr]);
                 }
             }
         }
