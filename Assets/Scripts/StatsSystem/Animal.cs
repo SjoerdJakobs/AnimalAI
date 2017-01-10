@@ -40,6 +40,7 @@ public class Animal : LivingEntity
         while (true)
         {
             //print("test");
+            
             animalStats.stamina += animalStats.staminaRegen;
             if (animalStats.stamina > animalStats.maxStamina)
             {

@@ -62,6 +62,7 @@ public class LivingEntity : MonoBehaviour , IAmLiving
     void SetStats()
     {
         entityStats.health += entityStats.healthRegen;
+        entityStats.age += 0.04f;
         if (entityStats.health > entityStats.maxHealth)
         {
             entityStats.health = entityStats.maxHealth;

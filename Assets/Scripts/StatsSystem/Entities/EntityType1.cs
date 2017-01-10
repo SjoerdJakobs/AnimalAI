@@ -54,6 +54,10 @@ public class EntityType1 : Animal
             //print(priorities.food);
             scriptAndPointsHandler.inputValue(2, priorities.sleep);
 
+            scriptAndPointsHandler.inputValue(3, priorities.reproduce);
+
+            scriptAndPointsHandler.inputValue(4, priorities.safety);
+
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -62,6 +66,7 @@ public class EntityType1 : Animal
     {
         priorities.food = animalStats.maxHunger / animalStats.hunger * animalStats.maxHunger; 
         priorities.sleep = animalStats.maxStamina - animalStats.stamina;
+        priorities.reproduce = entityStats.age;
     }
 
     void setStats()
@@ -80,6 +85,7 @@ public class Priorities
     public float food = 0;
     public float happy = 0;
     public float sleep = 0;
+    public float reproduce = 0;
 }
 
 [System.Serializable]
