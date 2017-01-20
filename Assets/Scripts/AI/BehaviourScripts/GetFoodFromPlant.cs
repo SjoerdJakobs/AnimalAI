@@ -5,7 +5,7 @@ public class GetFoodFromPlant : BehaveScript {
 
     [SerializeField]
     private LayerMask trees;
-    private NavMeshAgent agent;
+    private UnityEngine.AI.NavMeshAgent agent;
     private EntityType1 stats;
     private GameObject target;
     private IAmLiving tree;
@@ -17,7 +17,7 @@ public class GetFoodFromPlant : BehaveScript {
     void Awake()
     {
         stats = GetComponent<EntityType1>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     //this will run once when the script epened
